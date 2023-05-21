@@ -116,15 +116,27 @@ void TicTacToe::play() {
 }
 
 bool TicTacToe::verifyEndGame() {
-    auto winnerMarks = [&](int a, int b, int c) {
-        winnerPlay[a]++;
-        winnerPlay[b]++;
-        winnerPlay[c]++;
-    };
+    int x[3][9] = { {0, 1, 2, 3, 4, 5, 6, 7, 8}, {0, 3, 6, 1, 4, 7, 2, 5, 8}, {0, 4, 8, 2, 4, 6} };
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (i == 2 && j == 2) {
+                break;
+            }
+
+            if ((possibles[x[i][0+3*j]] == 'X' && possibles[x[i][1+3*j]] == 'X' && possibles[x[i][2+3*j]] == 'X') || (possibles[x[i][0+3*j]] == 'O' && possibles[x[i][1+3*j]] == 'O' && possibles[x[i][2+3*j]] == 'O')) {
+                (possibles[x[i][0+3*j]] == 'X') ? playerWins++ : computerWins++; 
+                winnerPlay[x[i][0+3*j]]++;
+                winnerPlay[x[i][1+3*j]]++;
+                winnerPlay[x[i][2+3*j]]++;
+                return true;
+            }
+        }     
+    }
 
     int counter = 0;
     for (int i = 0; i < 9; i++) {
-        if (possibles[i] == 'X' || possibles[i] == 'O') {
+        if (possibles[i] != static_cast<char>(i+49)) {
             counter++;
         }
     }
@@ -132,63 +144,71 @@ bool TicTacToe::verifyEndGame() {
         ties++; return true;
     }
 
-    int x[3][9] = { {0, 1, 2, 3, 4, 5, 6, 7, 8}, {0, 3, 6, 1, 4, 7, 2, 5, 8}, {0, 4, 8, 2, 4, 6} };
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (i == 2 && j == 2) {
-                break;
-            }
-            
-            if ((possibles[x[i][0+3*j]] == 'X' && possibles[x[i][1+3*j]] == 'X' && possibles[x[i][2+3*j]] == 'X') || (possibles[x[i][0+3*j]] == 'O' && possibles[x[i][1+3*j]] == 'O' && possibles[x[i][2+3*j]] == 'O')) {
-                (possibles[0] == 'X') ? playerWins++ : computerWins++; 
-                winnerMarks(x[i][0+3*j], x[i][1+3*j], x[i][2+3*j]);
-                return true;
-            }
-        }     
-    }
     return false;
 }
 
 void TicTacToe::computerPlay() {
     bool ok = false;
     int computerPlay;
-
     srand(time(0));
 
-    for (int i = 0; i < 2; i++) {
-        if ((possibles[i] != 'X' && possibles[i] != 'O') && possibles[4] == 'X' && possibles[8-2*i] == 'X') {
-            computerPlay = 0+2*i; ok = true; break;
-        } else if (possibles[i] == 'X' && (possibles[4] != 'X' && possibles[4] != 'O') && possibles[8-2*i] == 'X') {
-            computerPlay = 4; ok = true; break;
-        } else if (possibles[i] == 'X' && possibles[4] == 'X' && (possibles[8-2*i] != 'X' && possibles[8-2*i] != 'O')) {
-            computerPlay = 8-2*i; ok = true; break;
-        }
-    }
-
-    if (!ok) {
+    auto attack = [&]()->int {
+        int x[3][9] = { {0, 1, 2, 3, 4, 5, 6, 7, 8}, {0, 3, 6, 1, 4, 7, 2, 5, 8}, {0, 4, 8, 2, 4, 6} };
         for (int i = 0; i < 3; i++) {
-            if ((possibles[0+3*i] != 'X' && possibles[0+3*i] != 'O') && possibles[1+3*i] == 'X' && possibles[2+3*i] == 'X') {
-                computerPlay = 0+3*i; ok = true; break;
-            } else if (possibles[0+3*i] == 'X' && (possibles[1+3*i] != 'X' && possibles[1+3*i] != 'O') && possibles[2+3*i] == 'X') {
-                computerPlay = 1+3*i; ok = true; break;
-            } else if (possibles[0+3*i] == 'X' && possibles[1+3*i] == 'X' && (possibles[2+3*i] != 'X' && possibles[2+3*i] != 'O')) {
-                computerPlay = 2+3*i; ok = true; break;
-            }
-        }
-    }
+            for (int j = 0; j < 3; j++) {
 
-    if (!ok) {
-        for (int i = 0; i < 3; i++) {
-            if ((possibles[0+i] != 'X' && possibles[0+i] != 'O') && possibles[3+i] == 'X' && possibles[6+i] == 'X') {
-                computerPlay = i+0; ok = true; break;
-            }
-            else if (possibles[0+i] == 'X' && (possibles[3+i] != 'X' && possibles[3+i] != 'O') && possibles[6+i] == 'X') {
-                computerPlay = i+3; ok = true; break;
-            }
-            else if (possibles[0+i] == 'X' && possibles[3+i] == 'X' && (possibles[6+i] != 'X' && possibles[6+i] != 'O')) {
-                computerPlay = i+6; ok = true; break;
-            }
+                if (i == 2 && j == 2) {
+                    break;
+                }
+
+                if (possibles[x[i][3*j]] == static_cast<char>(x[i][3*j]+49) && possibles[x[i][1+3*j]] == 'O' && possibles[x[i][2+3*j]] == 'O') {
+                    return x[i][3*j];
+                }
+                else if (possibles[x[i][3*j]] == 'O' && possibles[x[i][1+3*j]] == static_cast<char>(x[i][1+3*j]+49) &&  possibles[x[i][2+3*j]] == 'O') {
+                    return x[i][1+3*j];
+                }
+                else if (possibles[x[i][3*j]] == 'O' && possibles[x[i][1+3*j]] == 'O' && possibles[x[i][2+3*j]] == static_cast<char>(x[i][2+3*j]+49)) {
+                    return x[i][2+3*j];
+                }
+            }     
         }
+
+        return -1;
+
+    };
+
+    auto defense = [&]()->int {
+        int y[3][9] = { {0, 4, 8, 2, 4, 6}, {0, 1, 2, 3, 4, 5, 6, 7, 8}, {0, 3, 6, 1, 4, 7, 2, 5, 8} };
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i == 0 && j == 2) {
+                    break;
+                }
+
+                if (possibles[y[i][3*j]] == static_cast<char>(y[i][3*j]+49) && possibles[y[i][1+3*j]] == 'X' && possibles[y[i][2+3*j]] == 'X') {
+                    return y[i][3*j];
+                } else if (possibles[y[i][3*j]] == 'X' && possibles[y[i][1+3*j]] == static_cast<char>(y[i][1+3*j]+49) && possibles[y[i][2+3*j]] == 'X') {
+                    return y[i][1+3*j];
+                } else if (possibles[y[i][3*j]] == 'X' && possibles[y[i][1+3*j]] == 'X' && possibles[y[i][2+3*j]] == static_cast<char>(y[i][2+3*j]+49)) {
+                    return y[i][2+3*j];
+                }
+            } 
+        }
+
+        return -1;
+    
+    };
+
+    computerPlay = attack();
+
+    if (computerPlay > -1) {
+        ok = true;
+    }
+    if (!ok) {
+        computerPlay = defense();
+        if (computerPlay > -1) {
+            ok = true;
+        } 
     }
 
     while (!ok) {
@@ -231,11 +251,9 @@ void TicTacToe::computerPlay() {
 }
 
 void TicTacToe::restart() {
-    for (int i = 49; i<58; i++) {
-        if (i < 58) {
-            winnerPlay[i-49] = 0;
-        }
-        possibles[i-49] = static_cast<char>(i);
+    for (int i = 0; i < 9; i++) {
+        winnerPlay[i] = 0;
+        possibles[i] = static_cast<char>(i+49);
     }
     endGame = false;
 }

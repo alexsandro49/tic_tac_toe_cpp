@@ -1,16 +1,19 @@
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 #include "tic_tac_toe.h"
 
 void beginGame(TicTacToe game) {
+    srand(time(0));
+    int start = rand() % 2;
     game.show();
     while (true) {
-        game.play();
+        (start == 0) ? game.play() : game.computerPlay();
         game.show();
         if (game.endGame) {
             break;
         }
-        game.computerPlay();
+        (start == 1) ? game.play() : game.computerPlay();
         game.show();
         if (game.endGame) {
             break;
