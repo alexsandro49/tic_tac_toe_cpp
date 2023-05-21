@@ -2,7 +2,6 @@
 #include <iomanip>
 #include "tic_tac_toe.h"
 
-
 void beginGame(TicTacToe game) {
     game.show();
     while (true) {
@@ -40,6 +39,7 @@ void beginGame(TicTacToe game) {
                 std::cout << "EMPATES: " << game.ties << '\n';
                 std::cout << std::setfill('-') << std::setw(30) << "\n";
                 std::cout << std::setfill('-') << std::setw(30) << "\n";
+
                 exit(0);
                 break;
             default:

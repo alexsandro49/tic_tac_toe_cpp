@@ -5,13 +5,16 @@
 class TicTacToe {
     private:
         char possibles[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        int winnerPlay[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     public:
         bool endGame = false;
-        int playerWins, computerWins, ties;
+        int playerWins = 0;
+        int computerWins = 0;
+        int ties = 0;
 
-        void drawLine(char x, char y, char z, bool floor);
+        void drawLine(char i, char j, char k, int z, bool floor);
 
-        void colorChar(char color);
+        void colorChar(char color, int pos);
 
         void show();
 
